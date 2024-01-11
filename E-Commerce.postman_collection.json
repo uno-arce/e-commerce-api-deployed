@@ -1,0 +1,593 @@
+{
+	"info": {
+		"_postman_id": "977f9931-3d12-4a85-a4c5-2a91aa558cca",
+		"name": "E-Commerce",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21998448"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "/register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"The\",\r\n    \"lastName\": \"Admin\",\r\n    \"username\": \"admin123\",\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"1234\",\r\n    \"mobileNumber\": \"09987654321\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/users/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"juan@gmail.com\",\r\n    \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/users/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/:productId/checkout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWU2Y2ExZmY4NGYxN2QzNDhlNDVlOCIsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImlhdCI6MTcwNDg4MTQwOH0.qXA5O6Ah9Lre5bRxT_CFbrtATo46mz1Kv5idVzensQU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"quantity\": 2,\r\n    \"paymentMethod\": \"Cash on Delivery\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/users/659cd70e3b7c8832abb0fb77/checkout",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"659cd70e3b7c8832abb0fb77",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/:userId/user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/users/659a3193efebb57f214d43ab/user",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"659a3193efebb57f214d43ab",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/update-to-admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWEzNmE3YmE3M2FhN2ZlOGJhZjNhOSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzA0ODAzMjAxfQ.UmQu3H8MdC-g7LC5hWtQEF-XgMzAMBR5ikPatXw1mxA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"659a3193efebb57f214d43ab\",\r\n    \"role\": \"Admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/users/update-to-admin",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"update-to-admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/my-orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWEzMTkzZWZlYmI1N2YyMTRkNDNhYiIsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MDQ4MDQyMzR9.116s2zbiEe3vnWcs4fxKGpXMEZ-Kq91OkXCkhlKRCQs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/users/my-orders",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"my-orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/all-orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWEzMTkzZWZlYmI1N2YyMTRkNDNhYiIsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MDQ4MDQyMzR9.116s2zbiEe3vnWcs4fxKGpXMEZ-Kq91OkXCkhlKRCQs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/users/all-orders",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"all-orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/:productId/add-to-cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWU2Y2ExZmY4NGYxN2QzNDhlNDVlOCIsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImlhdCI6MTcwNDg4Mzg3NX0.pMHrbyWqSYLHSSYGKhF_DRQxyjPaLwb-p6HBSOo9UrA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/users/659cd70e3b7c8832abb0fb77/add-to-cart",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"659cd70e3b7c8832abb0fb77",
+								"add-to-cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/my-cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWU2Y2ExZmY4NGYxN2QzNDhlNDVlOCIsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImlhdCI6MTcwNDg4NzU2OH0.vthYLxORyKTg-_tP11JEhFZM-_uuVJ2IH_AJ46mk7-U",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/users/my-cart",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"my-cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/my-cart/edit",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWU2Y2ExZmY4NGYxN2QzNDhlNDVlOCIsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImlhdCI6MTcwNDk1MTY1Nn0.qav7F1Mfq6auV70a5et-x8-87cmVuX-_Pvcx0u-J_Ds",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productNo\": 1,\r\n    \"quantity\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/users/my-cart/edit",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"my-cart",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/my-cart/remove",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWU2Y2ExZmY4NGYxN2QzNDhlNDVlOCIsImVtYWlsIjoianVhbkBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsImlhdCI6MTcwNDk3MDM1OX0.OY6xQiXSEpAHhpWId_DODoawBOtc5pQ6o5Oy_ATSKvw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/users/my-cart/remove/659cd70e3b7c8832abb0fb77",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"my-cart",
+								"remove",
+								"659cd70e3b7c8832abb0fb77"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/update-profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Juan\",\r\n    \"lastName\": \"Arce\",\r\n    \"password\": \"1234\",\r\n    \"street\": \"Daisy Street\",\r\n    \"city\": \"Dasmariñas\",\r\n    \"province\": \"Cavite\",\r\n    \"zipCode\": \"4114\",\r\n    \"country\": \"Philippines\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/users/659e6ca1ff84f17d348e45e8/update-profile",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"users",
+								"659e6ca1ff84f17d348e45e8",
+								"update-profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "/create-product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWEzNmE3YmE3M2FhN2ZlOGJhZjNhOSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzA0NzgwNzk1fQ.7-Q5rodXba6tcijnSdMruaNyvAlIYyAUioYurc_2GZc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productName\": \"Cam1\",\r\n    \"productDescription\": \"Affordable digicam suitable for taking high quality photos\",\r\n    \"price\": 999,\r\n    \"stocks\": 99\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/products/create-product",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"products",
+								"create-product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWEzNmE3YmE3M2FhN2ZlOGJhZjNhOSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzA0NzA3NDkwfQ.7xgSpKqLGz8ON4XkngGzHExWK8Fgvu_ugDGHcjIfNOA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/products/all",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"products",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/products/",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/:productId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/products/659a6ce6b77faab91514bef9",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"products",
+								"659a6ce6b77faab91514bef9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/:productId/update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWEzNmE3YmE3M2FhN2ZlOGJhZjNhOSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzA0NzgxNTkxfQ.xmQ5Wx2fZrmanAebSQPHZni-Y4LjMjXsoIHAKWc1OBM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productName\" : \"Bullet EX769 Punk Edition\",\r\n    \"productDescription\": \"Affordable digicam suitable for taking high quality photos\",\r\n    \"price\": 999,\r\n    \"stocks\": 99\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/products/659ce4275cf8f71a9480e23c/update",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"products",
+								"659ce4275cf8f71a9480e23c",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/:productId/archive",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWEzNmE3YmE3M2FhN2ZlOGJhZjNhOSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzA0NzgzMTgzfQ.N9pC7KpD6NxtcL1a_Qe_KguW2mJ7WpcwOCvCz1sbM1I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/products/659ce4275cf8f71a9480e23c/archive",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"products",
+								"659ce4275cf8f71a9480e23c",
+								"archive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/:productId/activate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OWEzNmE3YmE3M2FhN2ZlOGJhZjNhOSIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzA0NzgzMTgzfQ.N9pC7KpD6NxtcL1a_Qe_KguW2mJ7WpcwOCvCz1sbM1I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/products/659ce4275cf8f71a9480e23c/activate",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"products",
+								"659ce4275cf8f71a9480e23c",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
