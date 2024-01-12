@@ -1,5 +1,5 @@
 const Product = require("../models/Product.js");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const auth = require("../auth.js");
 
 /*
