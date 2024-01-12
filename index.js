@@ -8,7 +8,7 @@ const userRoutes = require("./routes/userRoutes.js");
 const productRoutes = require("./routes/productRoutes.js");
 
 // Server
-const port = 3001
+const port = 4002;
 const app = express();
 
 // Database Connection
@@ -24,8 +24,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
-app.use("/users", userRoutes);
-app.use("/products", productRoutes);
+app.use("/b2/users", userRoutes);
+app.use("/b2/products", productRoutes);
 
 app.listen(port, () => {
 	console.log(`API is now online on port ${port}`);
