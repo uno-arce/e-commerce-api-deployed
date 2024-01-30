@@ -53,7 +53,7 @@ module.exports.register = (request, response) => {
 	newUser.save().then(save => {
 		return response.send(true)
 	}).catch(error => {
-		return response.send(true)
+		return response.send(false)
 	})
 }
 
