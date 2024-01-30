@@ -15,16 +15,16 @@ module.exports.checkUserExists = async (request, response, next) => {
     const usernameExists = await User.exists({ username: request.body.username });
 
     if (emailExists) {
-    	return response.send("The email is already registered. Please use another email!");
+    	return response.send(true);
     } 
 
     if (usernameExists) {
-    	return response.send("The username is already taken. Please choose another username!");
+    	return response.send(true);
     } 
 
     next();
   } catch (error) {
-    response.send("Error occurred during user checking.");
+    response.send(true);
   }
 };
 
@@ -51,9 +51,9 @@ module.exports.register = (request, response) => {
 	});
 
 	newUser.save().then(save => {
-		return response.send(`${reqBody.email} is successfully registered!`)
+		return response.send(true)
 	}).catch(error => {
-		return response.send("Error encountered during user registration.")
+		return response.send(true)
 	})
 }
 
@@ -66,7 +66,7 @@ module.exports.register = (request, response) => {
 module.exports.login = (request, response) => {
 	User.findOne({email: request.body.email}).then(result => {
 		if(result === null) {
-			return response.send("Email does not exist! Please register an account before logging in.")
+			return response.send(false)
 		} else {
 			const isPasswordCorrect = bcrypt.compareSync(request.body.password, result.password);
 
@@ -75,7 +75,7 @@ module.exports.login = (request, response) => {
 
 				return response.send({accessToken: token})
 			} else {
-				return response.send("You provided wrong password. Please try again!")
+				return response.send(false)
 			}
 		}
 	})
@@ -153,7 +153,7 @@ module.exports.getProfile = (request, response) => {
 	User.findById(userId).then(result => {
 		result.password = ""
 		return response.send(result)
-	}).catch(error => response.send("Couldn't get profile."))
+	}).catch(error => response.send(false))
 }
 
 /*
