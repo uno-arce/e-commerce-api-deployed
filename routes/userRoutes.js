@@ -9,6 +9,8 @@ router.post("/register", userControllers.checkUserExists, userControllers.regist
 
 router.post("/login", userControllers.login);
 
+router.get("/details", verify, userControllers.getDetails);
+
 router.get("/:userId/user", userControllers.getProfile);
 
 router.post("/:productId/checkout", verify, userControllers.checkout);

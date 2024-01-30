@@ -15,16 +15,16 @@ module.exports.checkUserExists = async (request, response, next) => {
     const usernameExists = await User.exists({ username: request.body.username });
 
     if (emailExists) {
-    	return response.send(true);
+    	return response.send(false);
     } 
 
     if (usernameExists) {
-    	return response.send(true);
+    	return response.send(false);
     } 
 
     next();
   } catch (error) {
-    response.send(true);
+    response.send(false);
   }
 };
 
@@ -79,6 +79,15 @@ module.exports.login = (request, response) => {
 			}
 		}
 	})
+}
+
+module.exports.getDetails = (request, response) => {
+	let user = request.user;
+
+	User.findById(user.id).then(result => {
+		result.password = ""
+		return response.send(result)
+	}).catch(error => response.send(false))
 }
 
 /*
