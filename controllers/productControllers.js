@@ -19,7 +19,7 @@ module.exports.createProduct = (request, response) => {
 	});
 
 	newProduct.save().then(save => {
-		return response.send(`${reqBody.productName} is successfully created!`)
+		return response.send(true)
 	}).catch(error => {
 		return response.send(false)
 	})
@@ -27,7 +27,7 @@ module.exports.createProduct = (request, response) => {
 
 // Get all products
 module.exports.getAllProducts = (request, response) => {
-	Product.find({}).then(result => response.send(result)).catch(error => response.send(error))
+	Product.find({}).then(result => response.send(result)).catch(error => response.send(false))
 }
 
 /*
