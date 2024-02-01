@@ -65,8 +65,8 @@ module.exports.updateProduct = (request, response) => {
 	}
 
 	Product.findByIdAndUpdate(request.params.productId, updatedProduct).then(result => {
-		return response.send(`${reqBody.productName} is successfully updated!`)
-	}).catch(error => response.send("Error encountered during the update."))
+		return response.send(true)
+	}).catch(error => response.send(false))
 }
 
 /*
@@ -80,8 +80,8 @@ module.exports.archiveProduct = (request, response) => {
 	}
 
 	Product.findByIdAndUpdate(request.params.productId, updatedProduct).then(result => {
-		return response.send("The product is now inactive")
-	}).catch(error => response.send("Error encountered during the update."))
+		return response.send(true)
+	}).catch(error => response.send(false))
 }
 
 /*
@@ -95,6 +95,6 @@ module.exports.activateProduct = (request, response) => {
 	}
 
 	Product.findByIdAndUpdate(request.params.productId, updatedProduct).then(result => {
-		return response.send("The product is now active")
-	}).catch(error => response.send("Error encountered during the update."))
+		return response.send(true)
+	}).catch(error => response.send(false))
 }
