@@ -128,7 +128,7 @@ module.exports.checkout = async (request, response) => {
 	})
 
 	if(isUserUpdated !== true) {
-		return response.send({message: "User not updated!"});
+		return response.send(false);
 	}
 
 	let isProductUpdated = await Product.findById(request.params.productId).then(result => {
@@ -142,11 +142,11 @@ module.exports.checkout = async (request, response) => {
 	})
 
 	if(isProductUpdated !== true) {
-		return response.send({message: "Product not updated!"})
+		return response.send(false)
 	}
 
 	if(isUserUpdated && isProductUpdated) {
-		return response.send({message: "Product ordered successfully."})
+		return response.send(true)
 	}
 }
 
@@ -276,7 +276,7 @@ module.exports.addToCart = async (request, response) => {
 		})
 
 		if(isUserCartUpdated) {
-			return response.send(`${selectedProduct.productName} is successfully added to cart`);
+			return response.send(true);
 		}
 	} catch (error) {
 			return response.send(error);
