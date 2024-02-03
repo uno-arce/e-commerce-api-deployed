@@ -254,6 +254,7 @@ module.exports.retrieveAllUserOrders = (request, response) => {
 */
 module.exports.addToCart = async (request, response) => {
 	try{
+		let reqBody = request.body
 		let productId = request.params.productId;
 		let userId = request.user.id;
 		let selectedProduct = await Product.findById(productId);
@@ -263,7 +264,7 @@ module.exports.addToCart = async (request, response) => {
 				productId: productId,
 				productName: selectedProduct.productName,
 				price: selectedProduct.price,
-				quantity: 1,
+				quantity: reqBody.quantity,
 				subTotal: 0,
 			}
 			productToBeAdded.subTotal = productToBeAdded.price * productToBeAdded.quantity;
