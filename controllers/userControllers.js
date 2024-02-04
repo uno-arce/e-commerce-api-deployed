@@ -161,7 +161,7 @@ module.exports.checkout = async (request, response) => {
 		newStockSoldView.stocks -= reqBody.quantity;
 		newStockSoldView.sold += reqBody.quantity;
 
-		await Product.findByIdAndUpdate(request.params.productId, newStockSoldView).then(result => {
+		Product.findByIdAndUpdate(request.params.productId, newStockSoldView).then(result => {
 			true
 			}).catch(error => false)
 
