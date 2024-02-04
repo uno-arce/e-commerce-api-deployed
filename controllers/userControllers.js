@@ -102,6 +102,23 @@ module.exports.checkout = async (request, response) => {
 	let user = request.user;
 	const checkedOutProduct = await Product.findById(request.params.productId);
 
+	let newAddress = {
+				address: {
+					blkLot: reqBody.blkLot,
+					street: reqBody.street,
+					city: reqBody.city,
+					province: reqBody.province,
+					zipCode: reqBody.zipCode,
+					country: reqBody.country
+				}
+			}
+
+	let isAddressUpdated = User.findByIdAndUpdate(userId, newAddress).then(result => true).catch(error => false);
+
+	if(isAddressUpdated !== true) {
+		return response.send(false);
+	}
+
 	let isUserUpdated = await User.findById(user.id).then(result => {
 		let newOrderProduct = {
 			products: [
@@ -124,21 +141,6 @@ module.exports.checkout = async (request, response) => {
 
 		result.orderedProduct.push(newOrderProduct);
 
-		let newAddress = {
-				address: {
-					blkLot: reqBody.blkLot,
-					street: reqBody.street,
-					city: reqBody.city,
-					province: reqBody.province,
-					zipCode: reqBody.zipCode,
-					country: reqBody.country
-				}
-			}
-
-		User.findByIdAndUpdate(userId, newAddress).then(result => {
-			true
-			}).catch(error => false)
-
 		return result.save().then(saved => true).catch(error => false);
 	})
 
@@ -153,18 +155,6 @@ module.exports.checkout = async (request, response) => {
 
 		result.userOrders.push(newUserToOrder);
 
-		let newStockSoldView = {
-			stocks: checkedOutProduct.stocks,
-			sold: checkedOutProduct.sold
-		}
-
-		newStockSoldView.stocks -= reqBody.quantity;
-		newStockSoldView.sold += reqBody.quantity;
-
-		Product.findByIdAndUpdate(request.params.productId, newStockSoldView).then(result => {
-			true
-			}).catch(error => false)
-
 		return result.save().then(saved => true).catch(error => false);
 	})
 
@@ -172,7 +162,21 @@ module.exports.checkout = async (request, response) => {
 		return response.send(false)
 	}
 
-	if(isUserUpdated && isProductUpdated) {
+	let newStockSoldView = {
+		stocks: checkedOutProduct.stocks,
+		sold: checkedOutProduct.sold
+	}
+
+	newStockSoldView.stocks -= reqBody.quantity;
+	newStockSoldView.sold += reqBody.quantity;
+
+	let isProductSoldStocksUpdated = await Product.findByIdAndUpdate(request.params.productId, newStockSoldView).then(result => true).catch(error => false)
+
+	if(isProductSoldStocksUpdated !== true) {
+		return response.send(false);
+	}
+
+	if(isUserUpdated && isProductUpdated && isAddressUpdated && isProductSoldStocksUpdated) {
 		return response.send(true)
 	}
 }
