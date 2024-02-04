@@ -31,6 +31,10 @@ const userSchema = mongoose.Schema({
 		default: "User"
 	},
 	address: {
+		blkLot: {
+			type: String,
+			default: null
+		},
 		street: {
 			type: String,
 			default: null
