@@ -102,25 +102,6 @@ module.exports.checkout = async (request, response) => {
 	let user = request.user;
 	const checkedOutProduct = await Product.findById(request.params.productId);
 
-	let newAddress = {
-			address: {
-				blkLot: reqBody.blkLot,
-				street: reqBody.street,
-				city: reqBody.city,
-				province: reqBody.province,
-				zipCode: reqBody.zipCode,
-				country: reqBody.country
-			}
-		}
-
-	let isAddressUpdated = await User.findByIdAndUpdate(userId, newAddress).then(result => {
-			return true
-		}).catch(error => false)
-
-	if(isAddressUpdated !==) {
-		return response.send(false);
-	}
-
 	let isUserUpdated = await User.findById(user.id).then(result => {
 		let newOrderProduct = {
 			products: [
@@ -164,7 +145,7 @@ module.exports.checkout = async (request, response) => {
 		return response.send(false)
 	}
 
-	if(isUserUpdated && isProductUpdated && isAddressUpdated) {
+	if(isUserUpdated && isProductUpdated) {
 		return response.send(true)
 	}
 }
