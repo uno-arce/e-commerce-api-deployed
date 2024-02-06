@@ -245,8 +245,6 @@ module.exports.updateProfile = (request, response) => {
 	let newUserProfile = {
 		firstName: reqBody.firstName,
 		lastName: reqBody.lastName,
-		username: reqBody.username,
-		email: reqBody.email,
 		mobileNumber: reqBody.mobileNumber,
 		address: {
 			blkLot: reqBody.blkLot,
@@ -258,7 +256,11 @@ module.exports.updateProfile = (request, response) => {
 		}
 	}
 
-	User.findByIdAndUpdate(userId, newUserProfile).then(result => true).catch(error => false)
+	User.findByIdAndUpdate(userId, newUserProfile).then(result => {
+		return response.send(true)
+	}).catch(error => {
+		return response.send(false)
+	})
 }
 
 
