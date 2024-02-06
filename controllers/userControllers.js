@@ -246,7 +246,7 @@ module.exports.updateProfile = (request, response) => {
 		firstName: reqBody.firstName,
 		lastName: reqBody.lastName,
 		username: reqBody.username,
-		email, reqBody.email,
+		email: reqBody.email,
 		mobileNumber: reqBody.mobileNumber,
 		address: {
 			blkLot: reqBody.blkLot,
