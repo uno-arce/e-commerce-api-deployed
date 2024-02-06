@@ -255,9 +255,30 @@ module.exports.updateProfile = (request, response) => {
 		}
 	}
 
-	User.findByIdAndUpdate(userId, newUserProfile).then(result => {
-		return response.send(`${result.username}'s profile is successfully updated.`)
-	}).catch(error => response.send("Failed to update profile."))
+	User.findByIdAndUpdate(userId, newUserProfile).then(result => true).catch(error => false)
+}
+
+
+module.exports.resetPassword = (request, response) => {
+	const reqBody = request.body;
+	const userId = request.user.id;
+
+	User.findById(userId).then(result => {
+		const hashedPassword = bcrypt.hashSync(reqBody.newPassword, 10);
+
+		const isPasswordSame = bcrypt.compareSync(reqBody.newPassword, result.password);
+
+		if (!isPasswordSame && reqBody.newPassword === reqBody.confirmNewPassword) {
+
+			result.password = hashedPassword;
+
+			return result.save().then(saved => {
+				return response.send(true)
+			}).catch(error => false);
+		} else {
+			return response.send(false);
+		}
+	}).catch(error => false)
 }
 
 /*

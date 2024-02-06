@@ -19,6 +19,8 @@ router.put("/update-to-admin", verify, verifyAdmin, userControllers.updateToAdmi
 
 router.put("/update-profile", verify, userControllers.updateProfile);
 
+router.put('/reset-password', verify, userControllers.resetPassword);
+
 router.get("/my-orders", verify, userControllers.retrieveUserOrders);
 
 router.get("/all-orders", verify, verifyAdmin, userControllers.retrieveAllUserOrders);
