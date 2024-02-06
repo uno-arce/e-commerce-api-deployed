@@ -63,6 +63,7 @@ module.exports.updateProduct = (request, response) => {
 		productDescription: reqBody.productDescription,
 		price: reqBody.price,
 		stocks: reqBody.stocks,
+		image: request.file ? `/uploads/${request.file.filename}` : null,
 		updatedOn: new Date()
 	}
 

@@ -19,7 +19,7 @@ router.get("/", productControllers.getAllActive);
 router.get("/:productId", productControllers.getProduct);
 
 // route for updating a product, admin only
-router.put("/:productId/update", verify, verifyAdmin, productControllers.updateProduct);
+router.put("/:productId/update", verify, verifyAdmin, upload.single('image'), productControllers.updateProduct);
 
 // route for archiving a product, admin only
 router.put("/:productId/archive", verify, verifyAdmin, productControllers.archiveProduct);
