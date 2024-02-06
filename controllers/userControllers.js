@@ -245,6 +245,9 @@ module.exports.updateProfile = (request, response) => {
 	let newUserProfile = {
 		firstName: reqBody.firstName,
 		lastName: reqBody.lastName,
+		username: reqBody.username,
+		email, reqBody.email,
+		mobileNumber: reqBody.mobileNumber
 		address: {
 			blkLot: reqBody.blkLot,
 			street: reqBody.street,
