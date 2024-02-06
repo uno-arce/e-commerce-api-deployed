@@ -1,4 +1,5 @@
 const express = require("express");
+const upload = require('../multerConfig.js');
 const productControllers = require("../controllers/productControllers.js");
 const auth = require("../auth.js");
 const {verify, verifyAdmin} = auth;
@@ -6,7 +7,7 @@ const {verify, verifyAdmin} = auth;
 const router = express.Router();
 
 // route for create product, admin only
-router.post("/create-product", verify, verifyAdmin, productControllers.createProduct);
+router.post("/create-product", verify, verifyAdmin, upload.single('image'), productControllers.createProduct);
 
 // route for get all products, admin only
 router.get("/all", verify, verifyAdmin, productControllers.getAllProducts);

@@ -1,6 +1,7 @@
 const Product = require("../models/Product.js");
 const bcrypt = require("bcryptjs");
 const auth = require("../auth.js");
+const upload = require('../multerConfig.js');
 
 /*
 	Create product by:
@@ -15,7 +16,8 @@ module.exports.createProduct = (request, response) => {
 		productName: reqBody.productName,
 		productDescription: reqBody.productDescription,
 		price: reqBody.price,
-		stocks: reqBody.stocks
+		stocks: reqBody.stocks,
+		image: request.file ? `/uploads/${request.file.filename}` : null,
 	});
 
 	newProduct.save().then(save => {

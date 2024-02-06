@@ -21,6 +21,10 @@ const productSchema = mongoose.Schema({
 		type: Number,
 		default: 0
 	},
+	image: {
+		type: String,
+		default: null
+	},
 	reviews: [
 		{
 			userId: {

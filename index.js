@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 
 // Routes
 const userRoutes = require("./routes/userRoutes.js");
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
+app.use("/b2/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/b2/users", userRoutes);
 app.use("/b2/products", productRoutes);
 
