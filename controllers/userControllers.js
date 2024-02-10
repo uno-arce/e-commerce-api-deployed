@@ -342,6 +342,7 @@ module.exports.addToCart = async (request, response) => {
 			let productToBeAdded = {
 				productId: productId,
 				productName: selectedProduct.productName,
+				image: reqBody.image,
 				price: selectedProduct.price,
 				quantity: reqBody.quantity,
 				subTotal: 0,

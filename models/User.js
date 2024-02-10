@@ -67,6 +67,10 @@ const userSchema = mongoose.Schema({
 					type: String,
 					required: [true, "Product Name is required!"]
 				},
+				image: {
+					type: String,
+					required: [true, "Image is required!"]
+				},
 				price: {
 					type: Number,
 					required: [true, "Price is required!"]
