@@ -202,6 +202,62 @@ module.exports.checkout = async (request, response) => {
 	  }
 }
 
+// Handle checkout for multiple products
+module.exports.checkoutCart = async (req, res) => {
+  try {
+    const { address, paymentMethod, products } = req.body;
+    const userId = req.user.id;
+
+    // Update user's address
+    const updatedUser = await User.findByIdAndUpdate(userId, { address }, { new: true });
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Process each product in the cart
+    for (const productData of products) {
+      const { productId, quantity } = productData;
+
+      // Fetch the product details
+      const product = await Product.findById(productId);
+
+      if (!product) {
+        return res.status(404).json({ success: false, message: `Product with ID ${productId} not found` });
+      }
+
+      // Check if there are enough stocks
+      if (product.stocks < quantity) {
+        return res.status(400).json({ success: false, message: `Insufficient stocks for product ${product.productName}` });
+      }
+
+      // Create an order for the product
+      const orderProduct = {
+        productId,
+        productName: product.productName,
+        quantity,
+        subTotal: product.price * quantity,
+      };
+
+      // Update user's ordered products
+      updatedUser.orderedProducts.push(orderProduct);
+
+      // Update product stocks and sold count
+      product.stocks -= quantity;
+      product.sold += quantity;
+
+      // Save the changes
+      await updatedUser.save();
+      await product.save();
+    }
+
+    return res.json({ success: true, message: 'Checkout successful' });
+  } catch (error) {
+    console.error('Checkout Error:', error);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 /*
 	Get User Details:
 	1. Make the userId as params
@@ -429,5 +485,27 @@ module.exports.removeFromCart = async (request, response) => {
     response.send(true);
   } catch (error) {
     response.status(500).send(false);
+  }
+};
+
+exports.updateCart = async (req, res) => {
+  const userId = req.user.id; // Assuming you have the user ID available in the request
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.cart.products = req.body.products;
+    user.cart.totalAmount = req.body.totalAmount;
+
+    await user.save();
+
+    res.status(200).json({ message: 'Cart updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };

@@ -15,6 +15,8 @@ router.get("/:userId/user", userControllers.getProfile);
 
 router.post("/:productId/checkout", verify, userControllers.checkout);
 
+router.post('/checkoutCart', verify, userControllers.checkoutCart);
+
 router.put("/update-to-admin", verify, verifyAdmin, userControllers.updateToAdmin);
 
 router.put("/update-profile", verify, userControllers.updateProfile);
