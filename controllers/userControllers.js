@@ -466,7 +466,7 @@ module.exports.removeFromCart = async (request, response) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
-        $pull: { 'cart.products': { productId: productIdToRemove } }
+        $pull: { 'cart.products': { _id: productIdToRemove } }
       },
       { new: true }
     );
