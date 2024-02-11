@@ -91,9 +91,119 @@ module.exports.getDetails = (request, response) => {
 }
 
 /*
-	User checkout
+	User checkout: 
+	1. Contain the user from the request.user and body from request.body
+	2. Make a checkedOutProduct variable to contain the product to be checkout
+	3. Make the productId as params and pass it to find query params
+	4. Make a isUserUpdated variable to perform an update on user product. Push the newOrderProduct to the orderProductSave the product and return a boolean value
 */
 module.exports.checkout = async (request, response) => {
+	try {
+	    const reqBody = request.body;
+	    const user = request.user;
+	    const checkedOutProduct = await Product.findById(request.params.productId);
+
+	    const newAddress = {
+	      address: {
+	        blkLot: reqBody.blkLot,
+	        street: reqBody.street,
+	        city: reqBody.city,
+	        province: reqBody.province,
+	        zipCode: reqBody.zipCode,
+	        country: reqBody.country,
+	      },
+	    };
+
+	    const isAddressUpdated = await User.findByIdAndUpdate(user.id, newAddress).then(
+	      (result) => true
+	    ).catch((error) => false);
+
+	    if (!isAddressUpdated) {
+	      return response.send(false);
+	    }
+
+	    const isUserUpdated = await User.findById(user.id).then(async (result) => {
+	      const newOrderProduct = {
+	        products: [
+	          {
+	            productId: request.params.productId,
+	            productName: checkedOutProduct.productName,
+	            quantity: reqBody.quantity,
+	          },
+	        ],
+	        subTotal: 0,
+	        totalAmount: 0,
+	        paymentMethod: reqBody.paymentMethod,
+	      };
+
+	      newOrderProduct.totalAmount =
+	        newOrderProduct.subTotal +
+	        newOrderProduct.products.reduce((sum, product) => {
+	          return sum + product.quantity * checkedOutProduct.price;
+	        }, 0);
+
+	      newOrderProduct.subTotal = newOrderProduct.totalAmount;
+
+	      result.orderedProduct.push(newOrderProduct);
+
+	      await result.save();
+	      return true;
+	    });
+
+	    if (!isUserUpdated) {
+	      return response.send(false);
+	    }
+
+	    const isProductUpdated = await Product.findById(request.params.productId).then(
+	      async (result) => {
+	        const newUserToOrder = {
+	          userId: user.id,
+	        };
+
+	        result.userOrders.push(newUserToOrder);
+
+	        await result.save();
+	        return true;
+	      }
+	    );
+
+	    if (!isProductUpdated) {
+	      return response.send(false);
+	    }
+
+	    const newStockSoldView = {
+	      stocks: checkedOutProduct.stocks,
+	      sold: checkedOutProduct.sold,
+	    };
+
+	    newStockSoldView.stocks -= reqBody.quantity;
+	    newStockSoldView.sold += reqBody.quantity;
+
+	    const isProductSoldStocksUpdated = await Product.findByIdAndUpdate(
+	      request.params.productId,
+	      newStockSoldView
+	    ).then((result) => true).catch((error) => false);
+
+	    if (!isProductSoldStocksUpdated) {
+	      return response.send(false);
+	    }
+
+	    if (
+	      isUserUpdated &&
+	      isProductUpdated &&
+	      isAddressUpdated &&
+	      isProductSoldStocksUpdated
+	    ) {
+	      return response.send(true);
+	    }
+	  } catch (error) {
+	    console.error(error);
+	    return response.send(false);
+	  }
+}
+
+// Handle checkout for multiple products
+module.exports.checkoutCart = async (request, response) => {
   try {
     const reqBody = request.body;
     const user = request.user;
@@ -183,62 +293,6 @@ module.exports.checkout = async (request, response) => {
   }
 };
 
-
-// Handle checkout for multiple products
-module.exports.checkoutCart = async (req, res) => {
-  try {
-    const { address, paymentMethod, products } = req.body;
-    const userId = req.user.id;
-
-    // Update user's address
-    const updatedUser = await User.findByIdAndUpdate(userId, { address }, { new: true });
-
-    if (!updatedUser) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-
-    // Process each product in the cart
-    for (const productData of products) {
-      const { productId, quantity } = productData;
-
-      // Fetch the product details
-      const product = await Product.findById(productId);
-
-      if (!product) {
-        return res.status(404).json({ success: false, message: `Product with ID ${productId} not found` });
-      }
-
-      // Check if there are enough stocks
-      if (product.stocks < quantity) {
-        return res.status(400).json({ success: false, message: `Insufficient stocks for product ${product.productName}` });
-      }
-
-      // Create an order for the product
-      const orderProduct = {
-        productId,
-        productName: product.productName,
-        quantity,
-        subTotal: product.price * quantity,
-      };
-
-      // Update user's ordered products
-      updatedUser.orderedProducts.push(orderProduct);
-
-      // Update product stocks and sold count
-      product.stocks -= quantity;
-      product.sold += quantity;
-
-      // Save the changes
-      await updatedUser.save();
-      await product.save();
-    }
-
-    return res.json({ success: true, message: 'Checkout successful' });
-  } catch (error) {
-    console.error('Checkout Error:', error);
-    return res.status(500).json({ success: false, message: 'Internal Server Error' });
-  }
-};
 
 /*
 	Get User Details:
