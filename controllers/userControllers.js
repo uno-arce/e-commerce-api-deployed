@@ -126,7 +126,7 @@ module.exports.checkout = async (request, response) => {
       const checkedOutProduct = await Product.findById(productId);
 
       if (!checkedOutProduct) {
-        return response.status(404).json(false);
+        return response.status(404).json({ success: false, message: `Product with ID ${productId} not found` });
       }
 
       // Create an order for the product
@@ -176,9 +176,10 @@ module.exports.checkout = async (request, response) => {
       await checkedOutProduct.save();
     }
 
-    return response.json(true);
+    return response.json({ success: true, message: 'Checkout successful' });
   } catch (error) {
-    return response.status(500).json(false);
+    console.error('Checkout Error:', error);
+    return response.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
 
