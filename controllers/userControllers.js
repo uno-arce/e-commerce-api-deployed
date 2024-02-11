@@ -416,7 +416,7 @@ module.exports.removeFromCart = async (request, response) => {
     );
 
     if (!updatedUser) {
-      return response.status(404).send('User not found');
+      return response.status(404).send(false);
     }
 
     // Recalculate totalAmount after removing the product
@@ -426,8 +426,8 @@ module.exports.removeFromCart = async (request, response) => {
     // Save the updated user
     await updatedUser.save();
 
-    response.send(updatedUser.cart);
+    response.send(true);
   } catch (error) {
-    response.status(500).send('Internal Server Error');
+    response.status(500).send(false);
   }
 };
