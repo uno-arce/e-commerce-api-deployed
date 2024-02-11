@@ -495,7 +495,7 @@ exports.updateCart = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json(false);
     }
 
     user.cart.products = req.body.products;
@@ -503,9 +503,9 @@ exports.updateCart = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: 'Cart updated successfully' });
+    res.status(200).json(true);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json(false);
   }
 };
