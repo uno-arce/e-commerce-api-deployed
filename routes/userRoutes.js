@@ -39,6 +39,6 @@ router.put("/my-cart/edit", verify, userControllers.changeQuantity);
 // router for remove a product from cart
 router.put("/my-cart/remove/:productId", verify, userControllers.removeFromCart);
 
-router.put('/my-cart/update-cart', verify, userController.updateCart);
+router.put('/my-cart/update-cart', verify, userControllers.updateCart);
 
 module.exports = router;
