@@ -91,116 +91,98 @@ module.exports.getDetails = (request, response) => {
 }
 
 /*
-	User checkout: 
-	1. Contain the user from the request.user and body from request.body
-	2. Make a checkedOutProduct variable to contain the product to be checkout
-	3. Make the productId as params and pass it to find query params
-	4. Make a isUserUpdated variable to perform an update on user product. Push the newOrderProduct to the orderProductSave the product and return a boolean value
+	User checkout
 */
 module.exports.checkout = async (request, response) => {
-	try {
-	    const reqBody = request.body;
-	    const user = request.user;
-	    const checkedOutProduct = await Product.findById(request.params.productId);
+  try {
+    const reqBody = request.body;
+    const user = request.user;
 
-	    const newAddress = {
-	      address: {
-	        blkLot: reqBody.blkLot,
-	        street: reqBody.street,
-	        city: reqBody.city,
-	        province: reqBody.province,
-	        zipCode: reqBody.zipCode,
-	        country: reqBody.country,
-	      },
-	    };
+    // Update user's address
+    const newAddress = {
+      address: {
+        blkLot: reqBody.blkLot,
+        street: reqBody.street,
+        city: reqBody.city,
+        province: reqBody.province,
+        zipCode: reqBody.zipCode,
+        country: reqBody.country,
+      },
+    };
 
-	    const isAddressUpdated = await User.findByIdAndUpdate(user.id, newAddress).then(
-	      (result) => true
-	    ).catch((error) => false);
+    const isAddressUpdated = await User.findByIdAndUpdate(user.id, newAddress).then(
+      (result) => true
+    ).catch((error) => false);
 
-	    if (!isAddressUpdated) {
-	      return response.send(false);
-	    }
+    if (!isAddressUpdated) {
+      return response.send(false);
+    }
 
-	    const isUserUpdated = await User.findById(user.id).then(async (result) => {
-	      const newOrderProduct = {
-	        products: [
-	          {
-	            productId: request.params.productId,
-	            productName: checkedOutProduct.productName,
-	            quantity: reqBody.quantity,
-	          },
-	        ],
-	        subTotal: 0,
-	        totalAmount: 0,
-	        paymentMethod: reqBody.paymentMethod,
-	      };
+    // Process each product in the cart
+    for (const productData of reqBody.products) {
+      const { productId, quantity } = productData;
 
-	      newOrderProduct.totalAmount =
-	        newOrderProduct.subTotal +
-	        newOrderProduct.products.reduce((sum, product) => {
-	          return sum + product.quantity * checkedOutProduct.price;
-	        }, 0);
+      // Fetch the product details
+      const checkedOutProduct = await Product.findById(productId);
 
-	      newOrderProduct.subTotal = newOrderProduct.totalAmount;
+      if (!checkedOutProduct) {
+        return response.status(404).json({ success: false, message: `Product with ID ${productId} not found` });
+      }
 
-	      result.orderedProduct.push(newOrderProduct);
+      // Create an order for the product
+      const newOrderProduct = {
+        products: [
+          {
+            productId: productId,
+            productName: checkedOutProduct.productName,
+            quantity: quantity,
+          },
+        ],
+        subTotal: 0,
+        totalAmount: 0,
+        paymentMethod: reqBody.paymentMethod,
+      };
 
-	      await result.save();
-	      return true;
-	    });
+      newOrderProduct.totalAmount =
+        newOrderProduct.subTotal +
+        newOrderProduct.products.reduce((sum, product) => {
+          return sum + product.quantity * checkedOutProduct.price;
+        }, 0);
 
-	    if (!isUserUpdated) {
-	      return response.send(false);
-	    }
+      newOrderProduct.subTotal = newOrderProduct.totalAmount;
 
-	    const isProductUpdated = await Product.findById(request.params.productId).then(
-	      async (result) => {
-	        const newUserToOrder = {
-	          userId: user.id,
-	        };
+      // Update user's ordered products
+      user.orderedProduct.push(newOrderProduct);
 
-	        result.userOrders.push(newUserToOrder);
+      // Update product stocks and sold count
+      const newStockSoldView = {
+        stocks: checkedOutProduct.stocks,
+        sold: checkedOutProduct.sold,
+      };
 
-	        await result.save();
-	        return true;
-	      }
-	    );
+      newStockSoldView.stocks -= quantity;
+      newStockSoldView.sold += quantity;
 
-	    if (!isProductUpdated) {
-	      return response.send(false);
-	    }
+      // Save changes to user and product
+      await user.save();
+      await Product.findByIdAndUpdate(productId, newStockSoldView);
 
-	    const newStockSoldView = {
-	      stocks: checkedOutProduct.stocks,
-	      sold: checkedOutProduct.sold,
-	    };
+      // Add the user to the product's userOrders array
+      const newUserToOrder = {
+        userId: user.id,
+      };
+      checkedOutProduct.userOrders.push(newUserToOrder);
 
-	    newStockSoldView.stocks -= reqBody.quantity;
-	    newStockSoldView.sold += reqBody.quantity;
+      await checkedOutProduct.save();
+    }
 
-	    const isProductSoldStocksUpdated = await Product.findByIdAndUpdate(
-	      request.params.productId,
-	      newStockSoldView
-	    ).then((result) => true).catch((error) => false);
+    return response.json({ success: true, message: 'Checkout successful' });
+  } catch (error) {
+    console.error('Checkout Error:', error);
+    return response.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
 
-	    if (!isProductSoldStocksUpdated) {
-	      return response.send(false);
-	    }
-
-	    if (
-	      isUserUpdated &&
-	      isProductUpdated &&
-	      isAddressUpdated &&
-	      isProductSoldStocksUpdated
-	    ) {
-	      return response.send(true);
-	    }
-	  } catch (error) {
-	    console.error(error);
-	    return response.send(false);
-	  }
-}
 
 // Handle checkout for multiple products
 module.exports.checkoutCart = async (req, res) => {
