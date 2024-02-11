@@ -463,12 +463,10 @@ module.exports.removeFromCart = async (request, response) => {
     const userId = request.user.id;
     const productIdToRemove = request.params.productId;
 
-    const productIdToRemoveObjectId = Types.ObjectId(productIdToRemove);
-
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
-        $pull: { 'cart.products': { _id: productIdToRemoveObjectId } }
+        $pull: { 'cart.products': { _id: productIdToRemove } }
       },
       { new: true }
     );
