@@ -207,6 +207,7 @@ module.exports.checkoutCart = async (request, response) => {
   try {
     const reqBody = request.body;
     const user = request.user;
+    const userToCheckOut = await User.findById(user.id);
 
     // Update user's address
     const newAddress = {
@@ -262,7 +263,7 @@ module.exports.checkoutCart = async (request, response) => {
       newOrderProduct.subTotal = newOrderProduct.totalAmount;
 
       // Update user's ordered products
-      user.orderedProduct.push(newOrderProduct);
+      userToCheckOut.orderedProduct.push(newOrderProduct);
 
       // Update product stocks and sold count
       const newStockSoldView = {
@@ -274,7 +275,7 @@ module.exports.checkoutCart = async (request, response) => {
       newStockSoldView.sold += quantity;
 
       // Save changes to user and product
-      await user.save();
+      await userToCheckOut.save();
       await Product.findByIdAndUpdate(productId, newStockSoldView);
 
       // Add the user to the product's userOrders array
