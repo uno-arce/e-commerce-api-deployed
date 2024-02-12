@@ -383,12 +383,16 @@ module.exports.resetPassword = (request, response) => {
 	Retrieve user orders, authenticated users only
 */
 module.exports.retrieveUserOrders = (request, response) => {
-	let userId = request.user.id;
+  let userId = request.user.id;
 
-	User.findById(userId).then(result => {
-		return response.send({userOrders: result.orderedProduct});
-	}).catch(error => response.send("Error retrieving orders"))
-}
+  User.findById(userId)
+    .then(result => {
+      const reversedOrders = result.orderedProduct.reverse();
+      return response.send({ userOrders: reversedOrders });
+    })
+    .catch(error => response.send("Error retrieving orders"));
+};
+
 
 /*
 	Retrieve all users orders, admins only
